@@ -22,8 +22,10 @@ jobs:
         distribution: 'temurin'
         cache: 'gradle'
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+    - name: Clean gradlew line endings and grant permission
+      run: |
+        sed -i 's/\r$//' gradlew
+        chmod +x gradlew
 
     - name: Decode Debug Keystore
       run: |
@@ -32,7 +34,7 @@ jobs:
           tr -d '\r\n' < debug.keystore.base64 | base64 --decode > debug.keystore
         else
           echo "debug.keystore.base64 not found, creating dummy"
-          keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+          keytool -genkeypair -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -storetype PKCS12 -dname "CN=Android Debug,O=Android,C=US"
         fi
 
     - name: Set up Environment Variables
