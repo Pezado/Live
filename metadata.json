@@ -1,0 +1,6 @@
+{
+  "name": "Bac Bo Monitor",
+  "description": "Real-time automated outcome collector and trend tracker for Bac Bo live tables.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
