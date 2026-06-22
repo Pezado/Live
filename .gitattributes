@@ -1,0 +1,5 @@
+# Prevent git from corrupting jar files with text line-ending conversions (LF/CRLF)
+*.jar binary
+*.jar -text
+gradlew text eol=lf
+gradlew.bat text eol=crlf

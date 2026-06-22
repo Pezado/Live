@@ -43,8 +43,21 @@ jobs:
           cp .env.example .env
         fi
 
+    - name: Setup Gradle (fallback setup)
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-version: '9.3.1'
+
     - name: Build with Gradle
-      run: ./gradlew assembleDebug --no-daemon
+      run: |
+        if [ -x ./gradlew ] && jar tf gradle/wrapper/gradle-wrapper.jar >/dev/null 2>&1; then
+          echo "Gradle wrapper is healthy. Compiling with gradlew..."
+          ./gradlew assembleDebug --no-daemon
+        else
+          echo "WARNING: gradle-wrapper.jar is missing or corrupt!"
+          echo "Falling back to safe runner-installed system Gradle compile to prevent job failure..."
+          gradle assembleDebug --no-daemon
+        fi
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
