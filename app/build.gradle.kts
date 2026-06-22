@@ -46,7 +46,6 @@ android {
     debug {
       val customKeystore = file("${rootDir}/debug.keystore")
       if (customKeystore.exists()) {
-        signingConfig = signingConfigs.getByName("debugConfig")
       }
       // If debug.keystore does not exist, do not assign a signingConfig so the
       // Android Gradle Plugin uses the default debug signing (avoids referencing
