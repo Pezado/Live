@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch: # Allows manual trigger from Github UI
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,6 +21,9 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: 'gradle'
+
+    - name: Validate Gradle Wrapper
+      uses: gradle/actions/wrapper-validation-action@v3
 
     - name: Clean gradlew line endings and grant permission
       run: |
@@ -43,21 +46,8 @@ jobs:
           cp .env.example .env
         fi
 
-    - name: Setup Gradle (fallback setup)
-      uses: gradle/actions/setup-gradle@v4
-      with:
-        gradle-version: '9.3.1'
-
     - name: Build with Gradle
-      run: |
-        if [ -x ./gradlew ] && jar tf gradle/wrapper/gradle-wrapper.jar >/dev/null 2>&1; then
-          echo "Gradle wrapper is healthy. Compiling with gradlew..."
-          ./gradlew assembleDebug --no-daemon
-        else
-          echo "WARNING: gradle-wrapper.jar is missing or corrupt!"
-          echo "Falling back to safe runner-installed system Gradle compile to prevent job failure..."
-          gradle assembleDebug --no-daemon
-        fi
+      run: ./gradlew assembleDebug --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
